@@ -1,9 +1,12 @@
-import os
+﻿import os
 import time
+import random as rd
 
 
 line_num=30
 col_num=20
+level=0.2 #vitesse de chute
+
 pos = ()
 def line(line_num):
 
@@ -28,35 +31,44 @@ grid = (col(col_num, line_num))
 
 grid[len(grid)-1 ]= "*"*line_num
 
-#grid[10]=["O","O","O","O","","","","","O","O","O"]
+grid[19]=["*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*"]
 #grid[2]=["O","","","","","","","","O","O","O"]
 
-#on cree le symbole   ooo
-#                      o
+
 
 def init_symbol_t(grid):#return grid mais ca marche pas alors
    #il faut la transformer pour qu'elle retourne simplement la description (position et longeur par ligne) pour chaque motif
 
     mid_pos = int(len(grid[0]) / 2)
-    #return   mid_pos,4 #le baton
-    #return   mid_pos,1, mid_pos,3 #le L
-    #return   mid_pos+3,1, mid_pos,3 #l'autre L
-    #return   mid_pos,2, mid_pos-1,2 #truc decalé
-    #return   mid_pos-1,2, mid_pos,2 #truc décalé l'autre
-    return   mid_pos,2, mid_pos,2 #carré
-    #return   mid_pos,1, mid_pos-1,3 #la grille, la position du 1 char de la premiere ligne, sa longueur, laposition du 1ER char de la 2EME etc
-
-pos_1, len_1, pos_2, len_2 =  init_symbol_t(grid)
+    mot = rd.randint(5,7)
 
 
-def chute(grid, pos_1, len_1, pos_2, len_2):
+    if mot == 1:
+         return   mid_pos,4 #le baton
+    elif mot == 2:
+         return   mid_pos,1, mid_pos,3 #le L
+    elif mot == 3:
+         return   mid_pos+3,1, mid_pos,3 #l'autre L
+    elif mot == 4:
+        return   mid_pos,2, mid_pos-1,2 #truc decalé
+    elif mot == 5:
+         return   mid_pos-1,2, mid_pos,2 #truc décalé l'autre
+    elif mot == 6:
+         return   mid_pos,2, mid_pos,2 #carré
+    elif mot == 7:
+         return   mid_pos,1, mid_pos-1,3 #la grille, la position du 1 char de la premiere ligne, sa longueur, laposition du 1ER char de la 2EME etc
+
+
+
+
+def chute(grid):
     #descente des motif au coup par coup, en boucle , par motif(meilleur solution\
     #on fait dessendre un motif en entier avec ses deplacemet et son integration a la ligne pui la fct s'arrete (et on verifi si une ligne a été coplété
-
+    pos_1, len_1, pos_2, len_2 = init_symbol_t(grid) #on recupere les coordonées du motif
     for i in range(len(grid)-1): #penser a virer le -2 apres avoir implementé le point 4
 
         #1) on positionne le motif
-        grid[i][pos_1] = "O" * len_1
+        grid[i][pos_1:pos_1+len_1] = "O" * len_1
         grid[i+1][pos_2:pos_2 + len_2] = "O" * len_2
 
         #2) on affiche toute la grille
@@ -64,21 +76,24 @@ def chute(grid, pos_1, len_1, pos_2, len_2):
             print("".join(grid[x]))
 
         #3) on delay l'affichage
-        time.sleep(1)
+        time.sleep(level)
+
         #4) on verifie si le dessous est libre si non: on quitte la boucle break (ou encore mieu return); si oui: on poursuit
-        #if grid[i+3][pos_2] != "":
-         #   break
+        if grid[i+2][pos_2:pos_2 + len_2] != "": #pourquoi un coup i+2 et l'autre i+3
+            return "blabla"
 
         #5) on efface l'ancienne position
-        grid[i][pos_1] = "" * len_1
+        grid[i][pos_1:pos_1+len_1] = "" * len_1
         grid[i + 1][pos_2:pos_2 + len_2] = "" * len_2
 
         #6) on efface la console
         os.system('cls')
+i=0
+while i<10:
 
-
-
-chute(grid, pos_1, len_1, pos_2, len_2)
+    chute(grid)
+    os.system('cls')
+    i+=1
 
 
 #pause=input("fin")
