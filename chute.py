@@ -65,7 +65,7 @@ def chute(grid):
     #descente des motif au coup par coup, en boucle , par motif(meilleur solution\
     #on fait dessendre un motif en entier avec ses deplacemet et son integration a la ligne pui la fct s'arrete (et on verifi si une ligne a été coplété
     pos_1, len_1, pos_2, len_2 = init_symbol_t(grid) #on recupere les coordonées du motif
-    for i in range(len(grid)-1): #penser a virer le -2 apres avoir implementé le point 4
+    for i in range(len(grid)-1): 
 
         #1) on positionne le motif
         grid[i][pos_1:pos_1+len_1] = "O" * len_1
