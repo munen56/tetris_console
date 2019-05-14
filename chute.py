@@ -31,8 +31,8 @@ grid = (col(col_num, line_num))
 
 grid[len(grid)-1 ]= "*"*line_num
 
-#grid[3]=["*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*"]
-#grid[2]=["O","","","","","","","","O","O","O"]
+#grid[19]=["*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*"]
+grid[10]=["O","O","O","O","O","O","O","O","O","O","O","O","O","O","O","O","O","O","O","O","O"]
 
 
 
@@ -41,6 +41,7 @@ def init_symbol_t(grid):#return grid mais ca marche pas alors
 
     mid_pos = int(len(grid[0]) / 2)
     mot = rd.randint(5,7)
+    print (mot)
 
 
     if mot == 1:
@@ -79,8 +80,10 @@ def chute(grid):
         time.sleep(level)
 
         #4) on verifie si le dessous est libre si non: on quitte la boucle break (ou encore mieu return); si oui: on poursuit
-        if grid[i+3][pos_2] != " " : #pourquoi un coup i+2 et l'autre i+3
-            break
+
+        for lo in range(len_2):
+            if grid[i+2][pos_2 + lo] != " ": #pourquoi un coup i+2 et l'autre i+3
+                break
 
         #5) on efface l'ancienne position
         grid[i][pos_1:pos_1+len_1] = "" * len_1
