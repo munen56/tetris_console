@@ -31,7 +31,7 @@ grid = (col(col_num, line_num))
 
 grid[len(grid)-1 ]= "*"*line_num
 
-grid[19]=["*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*"]
+#grid[3]=["*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*","*"]
 #grid[2]=["O","","","","","","","","O","O","O"]
 
 
@@ -65,7 +65,7 @@ def chute(grid):
     #descente des motif au coup par coup, en boucle , par motif(meilleur solution\
     #on fait dessendre un motif en entier avec ses deplacemet et son integration a la ligne pui la fct s'arrete (et on verifi si une ligne a été coplété
     pos_1, len_1, pos_2, len_2 = init_symbol_t(grid) #on recupere les coordonées du motif
-    for i in range(len(grid)-1): 
+    for i in range(len(grid)-1):
 
         #1) on positionne le motif
         grid[i][pos_1:pos_1+len_1] = "O" * len_1
@@ -79,8 +79,8 @@ def chute(grid):
         time.sleep(level)
 
         #4) on verifie si le dessous est libre si non: on quitte la boucle break (ou encore mieu return); si oui: on poursuit
-        if grid[i+2][pos_2:pos_2 + len_2] != "": #pourquoi un coup i+2 et l'autre i+3
-            return "blabla"
+        if grid[i+3][pos_2] != " " : #pourquoi un coup i+2 et l'autre i+3
+            break
 
         #5) on efface l'ancienne position
         grid[i][pos_1:pos_1+len_1] = "" * len_1
