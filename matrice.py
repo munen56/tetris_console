@@ -30,15 +30,13 @@ class Matrix(object):
 
     def place_patern(self, pattern):
         """positionne un pattern en haut, au centre de la matrice"""
+
+
         X = 0 #premiere ligne (en haut) de la matrice
-        print("line_num",self.line_num)
         Y = round(self.column_num / 2) #milieu d'une ligne(si elle est paire ^^).
-        print("Y:",Y)
-        print(pattern)
 
         for x, value in pattern.items():
             for _, y in enumerate(value):
-                print("X:{}, x:{}, Y:{},y:{},  [X+x]:{}, [Y+y]:{}".format(X, x, Y,y,X+x, Y+y))
                 self.matrix[X+x][Y+y] =  "O"
 
 
