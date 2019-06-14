@@ -4,28 +4,36 @@ import unittest
 class Matrix(object):
 
 
-    def __init__(self, line=1, column=3, **border=bottom, left, right):
-        self.line = line
-        self.column = column
-        self.border = **border
+    def __init__(self, line=1, column=3, fill_motif="O", border=True):
+
+
+        self.line_num = line
+        self.column_num = column
+        self.fill_motif = fill_motif
+        self.border = border
+        self.matrix_col = []
         self.matrix = []
 
 
 
-        for i in range(self.column + 1): # on cree les colonne
-            self.matrix.append(" ")
+        self.matrix_col = [self.fill_motif for g in range(self.line_num)] # on créé une ligne contenant le nombre de colonne désiré ( column_num)
+        self.matrix = [self.fill_motif for j in range(self.line_num)] # on repete la ligne de matrix_col autant de fois qu'il nous faut de ligne (line_num)
 
-
+        if self.border :
+            for ind, val in enumerate(self.matrix):
+                self.matrix[ind][0] = "#"
+                self.matrix[ind][len(self.matrix[ind])] =  "#"
 
     def __repr__(self):
 
-        #2) on affiche toute la grille
-        for x in range(len(grid)):
-            return   print("".join(grid[x]))
+        matrix_display = ""
+        for line in range(len(self.matrix)): # on concatene toute les ligne en y intercalant  un retour chariot
+            matrix_display += "".join(self.matrix[line])+"\n"
+        return matrix_display
 
 
 
 
 
-
-Matrix(5, 5)
+play_ground = Matrix(5,10)
+print(play_ground)
