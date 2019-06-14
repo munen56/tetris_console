@@ -1,6 +1,7 @@
 # coding=utf-8
 import unittest
 import random
+import time
 
 
 class Matrix(object):
@@ -15,7 +16,7 @@ class Matrix(object):
         self.border = border
         #self.matrix_col = []
         self.matrix = []
-
+        self.last_coord = []
 
 
         #matrix_col = list(self.fill_motif * self.column_num) # on créé une ligne contenant le nombre de colonne désiré ( column_num)
@@ -40,6 +41,19 @@ class Matrix(object):
         for x, value in pattern.items():
             for _, y in enumerate(value):
                 self.matrix[X+x][Y+y] =  "O"
+                self.last_coord.append(([X+x],[Y+y]))
+
+    def down(self):
+        print (self.last_coord)
+        for coo in self.last_coord:
+            print(coo)
+
+
+            print("coo[0]:{}, coo[1]:{}".format(coo[0], coo[1]))
+            #if self.matrix [coo[0]+1][coo[1]] != " ":
+                #return -1
+
+
 
 
     def __repr__(self):
@@ -63,32 +77,41 @@ class pattern(object):
 
     def __init__(self, choice=1):
 
-        self.choice = choice
+
         self.coord = {} # dictionnaire qui contient la description des pattern  0 = 2,3,4 ou de la forme x = y+2, y+3, y+4
 
         if choice == "random":
-            random.choice(range(8))
+            choice = random.randrange(5)
+            print( choice)
+
+
 
         if choice == 1: #truc décalé
             self.coord = {0: [1, 2], 1: [0,1] }
 
+        elif choice == 2: # T a l'envers
+            self.coord = {0: [1], 1: [0, 1, 2]}
 
+        elif choice == 3: # carre
+            self.coord = {0: [0, 1], 1: [0, 1]}
+        elif choice == 4: # l
+            self.coord = {0: [2], 1: [0, 1, 2]}
 
-        #elif choice == 2:
-        #elif choice == 3:
-        #elif choice == 4:
         #elif choice == 5:
         #elif choice == 6:
         #elif choice == 7:
+        else:
+            print("error")
 
     def __repr__(self):
         return self.coord
 #-----------------------------------------------------------------------------------------------------------
 
 
-play_ground = Matrix(40, 80)
+play_ground = Matrix(20, 40)
 
 
+play_ground.place_patern(pattern(2).coord)
 
-play_ground.place_patern(pattern(1).coord)
+play_ground.down()
 print(play_ground)
