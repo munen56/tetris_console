@@ -19,7 +19,7 @@ class Matrix(object):
 
 
         self.matrix_col = list(self.fill_motif * self.column_num) # on créé une ligne contenant le nombre de colonne désiré ( column_num)
-        self.matrix = [self.matrix_col for j in range(self.line_num)] # on repete la ligne de matrix_col autant de fois qu'il nous faut de ligne (line_num)
+        self.matrix = [list([' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']) for j in range(self.line_num)] # on repete la ligne de matrix_col autant de fois qu'il nous faut de ligne (line_num)
 
         if self.border :
             for ind, val in enumerate(self.matrix):
@@ -31,24 +31,17 @@ class Matrix(object):
     def place_patern(self, pattern):
         """positionne un pattern en haut, au centre de la matrice"""
         X = 0 #premiere ligne (en haut) de la matrice
-        Y = int(self.line_num / 2) #milieu d'une ligne(si elle est paire ^^).
+        print("line_num",self.line_num)
+        Y = round(self.column_num / 2) #milieu d'une ligne(si elle est paire ^^).
+        print("Y:",Y)
+        print(pattern)
 
-        self.matrix[3][0] = "o"
-
-
-        matrix_display = ""
-        for line in range(len(self.matrix)): # on concatene toute les ligne en y intercalant  un retour chariot
-            matrix_display += "".join(self.matrix[line]) + "\n"
-        print(matrix_display)
-        """
         for x, value in pattern.items():
-            for y, _ in enumerate(value):
-
+            for _, y in enumerate(value):
+                print("X:{}, x:{}, Y:{},y:{},  [X+x]:{}, [Y+y]:{}".format(X, x, Y,y,X+x, Y+y))
                 self.matrix[X+x][Y+y] =  "O"
-        """
 
 
-"""
     def __repr__(self):
 
 
@@ -58,7 +51,7 @@ class Matrix(object):
 
         return matrix_display
 
-"""
+
 
 
 
@@ -93,10 +86,10 @@ class pattern(object):
 #-----------------------------------------------------------------------------------------------------------
 
 
-play_ground = Matrix(5, 15)
+play_ground = Matrix(10, 30)
 print(play_ground.matrix)
 
 
 play_ground.place_patern(pattern(1).coord)
-print(play_ground.matrix)
+print(play_ground)
 print(play_ground.matrix_col)
