@@ -5,19 +5,10 @@ import time
 import os
 import winsound
 
-#os.system("color 9f")
+os.system("color 60")
 #winsound.Beep(3500, 300)
 
-"""
-i = 1
-while i:
-    car = "0"
-    check =  msvcrt.kbhit()
-    if check:
-        car = msvcrt.getch()
-    print(car)
-    time.sleep(1)
-"""
+
 
 #-----------------------------------------------------------------------
 line_num=50
@@ -71,7 +62,7 @@ while z:
     elif car == b"s":
         x += 1
 
-    time.sleep(0.2)
+    time.sleep(0.1)
     os.system('cls')
     grid = (col(col_num, line_num))
 
