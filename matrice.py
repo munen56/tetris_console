@@ -13,13 +13,15 @@ class Matrix(object):
         self.column_num = column
         self.fill_motif = fill_motif
         self.border = border
-        self.matrix_col = []
+        #self.matrix_col = []
         self.matrix = []
 
 
 
-        self.matrix_col = list(self.fill_motif * self.column_num) # on créé une ligne contenant le nombre de colonne désiré ( column_num)
-        self.matrix = [list([' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']) for j in range(self.line_num)] # on repete la ligne de matrix_col autant de fois qu'il nous faut de ligne (line_num)
+        #matrix_col = list(self.fill_motif * self.column_num) # on créé une ligne contenant le nombre de colonne désiré ( column_num)
+        #self.matrix =  self.matrix_col * self.line_num # on repete la ligne de matrix_col autant de fois qu'il nous faut de ligne (line_num)
+        for j in range(self.line_num):
+            self.matrix.append( list(self.fill_motif * self.column_num))
 
         if self.border :
             for ind, val in enumerate(self.matrix):
@@ -84,10 +86,9 @@ class pattern(object):
 #-----------------------------------------------------------------------------------------------------------
 
 
-play_ground = Matrix(10, 30)
-print(play_ground.matrix)
+play_ground = Matrix(40, 80)
+
 
 
 play_ground.place_patern(pattern(1).coord)
 print(play_ground)
-print(play_ground.matrix_col)
