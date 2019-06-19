@@ -78,8 +78,8 @@ def chute(grid):
         #3) on delay l'affichage
         time.sleep(level)
 
-        #4) on verifie si le dessous est libre si non: on quitte la boucle break (ou encore mieu return); si oui: on poursuit
-        if grid[i+3][pos_2] != " " : #pourquoi un coup i+2 et l'autre i+3
+        #4) on verifie si le dessous est libre si non: on quitte la boucle break (ou encore mieux return); si oui: on poursuit
+        if grid[i+2][pos_2] != " " :
             break
 
         #5) on efface l'ancienne position

@@ -16,7 +16,7 @@ class Matrix(object):
         self.border = border
         #self.matrix_col = []
         self.matrix = []
-        self.last_coord = []
+        self.last_coord = {}
 
 
         #matrix_col = list(self.fill_motif * self.column_num) # on créé une ligne contenant le nombre de colonne désiré ( column_num)
@@ -38,12 +38,20 @@ class Matrix(object):
         X = 0 #premiere ligne (en haut) de la matrice
         Y = round(self.column_num / 2) #milieu d'une ligne(si elle est paire ^^).
 
-        for x, value in pattern.items():
-            for _, y in enumerate(value):
-                self.matrix[X+x][Y+y] =  "O"
-                self.last_coord.append(([X+x],[Y+y]))
 
-    def down(self):
+
+        for x,value in pattern.items(): # on actualise les coordonné des items pour les placer au milieus
+            self.last_coord[X +x] = [a + Y for a in pattern[x]]
+
+        print (self.last_coord)
+        for x, value in self.last_coord.items():
+            for _, y in enumerate(value):
+
+
+                self.matrix[x][y] =  "O"
+
+
+    """def down(self):
         print (self.last_coord)
         for coo in self.last_coord:
             print(coo)
@@ -51,7 +59,7 @@ class Matrix(object):
 
             print("coo[0]:{}, coo[1]:{}".format(coo[0], coo[1]))
             #if self.matrix [coo[0]+1][coo[1]] != " ":
-                #return -1
+                #return -1"""
 
 
 
@@ -113,5 +121,5 @@ play_ground = Matrix(20, 40)
 
 play_ground.place_patern(pattern(2).coord)
 
-play_ground.down()
+#play_ground.down()
 print(play_ground)
