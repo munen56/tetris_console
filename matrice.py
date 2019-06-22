@@ -2,6 +2,7 @@
 import unittest
 import random
 import time
+import os
 
 
 class Matrix(object):
@@ -14,13 +15,11 @@ class Matrix(object):
         self.column_num = column
         self.fill_motif = fill_motif
         self.border = border
-        #self.matrix_col = []
         self.matrix = []
         self.last_coord = {}
 
 
-        #matrix_col = list(self.fill_motif * self.column_num) # on créé une ligne contenant le nombre de colonne désiré ( column_num)
-        #self.matrix =  self.matrix_col * self.line_num # on repete la ligne de matrix_col autant de fois qu'il nous faut de ligne (line_num)
+
         for j in range(self.line_num):
             self.matrix.append( list(self.fill_motif * self.column_num))
 
@@ -36,30 +35,35 @@ class Matrix(object):
 
 
         X = 0 #premiere ligne (en haut) de la matrice
-        Y = round(self.column_num / 2) #milieu d'une ligne(si elle est paire ^^).
+        Y = self.column_num // 2 #milieu d'une ligne(si elle est paire ^^).
 
 
 
         for x,value in pattern.items(): # on actualise les coordonné des items pour les placer au milieus
-            self.last_coord[X +x] = [a + Y for a in pattern[x]]
+            self.last_coord[X + x] = [a + Y for a in pattern[x]]
 
-        print (self.last_coord)
         for x, value in self.last_coord.items():
             for _, y in enumerate(value):
-
-
                 self.matrix[x][y] =  "O"
 
 
-    """def down(self):
-        print (self.last_coord)
-        for coo in self.last_coord:
-            print(coo)
+    def down(self):
 
 
-            print("coo[0]:{}, coo[1]:{}".format(coo[0], coo[1]))
-            #if self.matrix [coo[0]+1][coo[1]] != " ":
-                #return -1"""
+        nouveau_coordonné = {}
+
+        for x, y in self.last_coord.items():
+                nouveau_coordonné[x+1] = y
+
+        for x, value in self.last_coord.items():
+            for _, y in enumerate(value):
+                self.matrix[x][y] =  " "
+
+        for x, value in nouveau_coordonné.items():
+            for _, y in enumerate(value):
+                self.matrix[x][y] =  "O"
+        self.last_coord = nouveau_coordonné
+
 
 
 
@@ -86,24 +90,23 @@ class pattern(object):
     def __init__(self, choice=1):
 
 
-        self.coord = {} # dictionnaire qui contient la description des pattern  0 = 2,3,4 ou de la forme x = y+2, y+3, y+4
-
+        self.coordonné_pour_affichage = {} # dictionnaire qui contient les coordonés des pattern  0 = 2,3,4 de la forme x = y+2, y+3, y+4
+        self.coordonné_pour_collision = {}
         if choice == "random":
             choice = random.randrange(5)
-            print( choice)
-
-
 
         if choice == 1: #truc décalé
-            self.coord = {0: [1, 2], 1: [0,1] }
+            self.coordonné_pour_affichage = {0: [1, 2], 1: [0, 1]}
+            self.coordonné_pour_collision = {0: [2], 1: [0, 1]}
 
         elif choice == 2: # T a l'envers
-            self.coord = {0: [1], 1: [0, 1, 2]}
+            self.coordonné_pour_affichage = {0: [1], 1: [0, 1, 2]}
+            self.coordonné_pour_collision = { 1: [0, 1, 2]}
 
         elif choice == 3: # carre
-            self.coord = {0: [0, 1], 1: [0, 1]}
+            self.coordonné_pour_affichage = {0: [0, 1], 1: [0, 1]}
         elif choice == 4: # l
-            self.coord = {0: [2], 1: [0, 1, 2]}
+            self.coordonné_pour_affichage = {0: [2], 1: [0, 1, 2]}
 
         #elif choice == 5:
         #elif choice == 6:
@@ -112,14 +115,21 @@ class pattern(object):
             print("error")
 
     def __repr__(self):
-        return self.coord
+        return self.coordonné_pour_affichage
 #-----------------------------------------------------------------------------------------------------------
 
+if __name__ == "__main__":
 
-play_ground = Matrix(20, 40)
+    play_ground = Matrix(20, 40)
 
 
-play_ground.place_patern(pattern(2).coord)
+    piece_en_cours = pattern(2)
+    play_ground.place_patern(piece_en_cours.coordonné_pour_affichage)
 
-#play_ground.down()
-print(play_ground)
+    print(play_ground.down())
+
+    while 1:
+        print(play_ground)
+        play_ground.down()
+        time.sleep(0.5)
+        os.system('cls')
