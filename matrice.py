@@ -68,16 +68,17 @@ class Matrix(object):
         check = msvcrt.kbhit()
         if check:
             car = msvcrt.getch()
+            Matrix.coordonné_vers_matrice(self, self.last_coord, " ")
 
         if car == b"q":
             for x, value in self.last_coord.items():
-                for y in value:
-                    self.last_coord[x] = y - 1
+                for y, value in enumerate(value):
+                    self.last_coord[x][y] = value - 1
 
         if car == b"d":
             for x, value in self.last_coord.items():
-                for y in value:
-                    self.last_coord[x] = y + 1
+                for y, value in enumerate(value):
+                    self.last_coord[x][y] = value + 1
 
 
 
@@ -126,7 +127,7 @@ class pattern(object):
         self.coordonné_pour_affichage = {} # dictionnaire qui contient les coordonés des pattern  0 = 2,3,4 de la forme x = y+2, y+3, y+4
         self.coordonné_pour_collision = {}
         if choice == "random":
-            choice = random.randrange(5)
+            choice = random.randrange(1,5)
 
         if choice == 1: #truc décalé
             self.coordonné_pour_affichage = {0: [1, 2], 1: [0, 1]}
@@ -155,18 +156,22 @@ if __name__ == "__main__":
 
     play_ground = Matrix(20, 40)
 
+    while True:
+        piece_en_cours = pattern("random")
+        play_ground.place_patern(piece_en_cours.coordonné_pour_affichage)
 
-    piece_en_cours = pattern(2)
-    play_ground.place_patern(piece_en_cours.coordonné_pour_affichage)
 
+        continu = True
+        while continu:
+            start_time = time.time()
+            end_time = 0
+            print(play_ground)
+            while end_time - start_time < 0.5:
+                end_time = time.time()
+                play_ground.slide()
+                #todo methode rotate
+            continu = play_ground.down()
 
-    continu = True
-    while continu:
-        print(play_ground)
-        time.sleep(0.5)
-        play_ground.slide()
-        continu = play_ground.down()
-
-        os.system('cls')
+            os.system('cls')
 
 
