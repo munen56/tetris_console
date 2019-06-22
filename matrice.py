@@ -29,6 +29,11 @@ class Matrix(object):
                 self.matrix[ind][self.column_num -1] =  "#"
             self.matrix[self.line_num - 1] = list("#" * self.column_num)
 
+    def coordonné_vers_matrice(self, dico_de_coordonné, symbole):
+
+        for x, value in dico_de_coordonné.items():
+            for _, y in enumerate(value):
+                self.matrix[x][y] = symbole
 
     def place_patern(self, pattern):
         """positionne un pattern en haut, au centre de la matrice"""
@@ -42,31 +47,42 @@ class Matrix(object):
         for x,value in pattern.items(): # on actualise les coordonné des items pour les placer au milieus
             self.last_coord[X + x] = [a + Y for a in pattern[x]]
 
+        Matrix.coordonné_vers_matrice(self, self.last_coord, "0")
+
+
+
+    def is_there_collision(self):
+        collision = False
+
         for x, value in self.last_coord.items():
             for _, y in enumerate(value):
-                self.matrix[x][y] =  "O"
+                if self.matrix[x+1][y] == "O" or self.matrix[x+1][y] == "#":
+                    collision = True
 
+        return collision
 
-    def down(self):
+    def slide(self):
+        
 
+    def down(self, ):
 
         nouveau_coordonné = {}
 
-        for x, y in self.last_coord.items():
-                nouveau_coordonné[x+1] = y
 
-        for x, value in self.last_coord.items():
-            for _, y in enumerate(value):
-                self.matrix[x][y] =  " "
+        if Matrix.is_there_collision(self):
+            Matrix.coordonné_vers_matrice(self, self.last_coord, "O")
+            self.last_coord = {}
+            return False
+        else:
 
-        for x, value in nouveau_coordonné.items():
-            for _, y in enumerate(value):
-                self.matrix[x][y] =  "O"
-        self.last_coord = nouveau_coordonné
+            for x, y in self.last_coord.items():
+                    nouveau_coordonné[x+1] = y
 
+            Matrix.coordonné_vers_matrice(self, self.last_coord, " ")
+            Matrix.coordonné_vers_matrice(self, nouveau_coordonné, "0")
 
-
-
+            self.last_coord = nouveau_coordonné
+            return True
 
     def __repr__(self):
 
@@ -97,11 +113,11 @@ class pattern(object):
 
         if choice == 1: #truc décalé
             self.coordonné_pour_affichage = {0: [1, 2], 1: [0, 1]}
-            self.coordonné_pour_collision = {0: [2], 1: [0, 1]}
+
 
         elif choice == 2: # T a l'envers
             self.coordonné_pour_affichage = {0: [1], 1: [0, 1, 2]}
-            self.coordonné_pour_collision = { 1: [0, 1, 2]}
+
 
         elif choice == 3: # carre
             self.coordonné_pour_affichage = {0: [0, 1], 1: [0, 1]}
@@ -126,10 +142,38 @@ if __name__ == "__main__":
     piece_en_cours = pattern(2)
     play_ground.place_patern(piece_en_cours.coordonné_pour_affichage)
 
-    print(play_ground.down())
 
-    while 1:
+    continu = True
+    while continu:
         print(play_ground)
-        play_ground.down()
-        time.sleep(0.5)
+        continu = play_ground.down()
+        time.sleep(0.2)
+        os.system('cls')
+
+    piece_en_cours = pattern(2)
+    play_ground.place_patern(piece_en_cours.coordonné_pour_affichage)
+
+    continu = True
+    while continu:
+        print(play_ground)
+        continu = play_ground.down()
+        time.sleep(0.2)
+        os.system('cls')
+    piece_en_cours = pattern(3)
+    play_ground.place_patern(piece_en_cours.coordonné_pour_affichage)
+
+    continu = True
+    while continu:
+        print(play_ground)
+        continu = play_ground.down()
+        time.sleep(0.2)
+        os.system('cls')
+    piece_en_cours = pattern(1)
+    play_ground.place_patern(piece_en_cours.coordonné_pour_affichage)
+
+    continu = True
+    while continu:
+        print(play_ground)
+        continu = play_ground.down()
+        time.sleep(0.2)
         os.system('cls')
