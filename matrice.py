@@ -3,6 +3,7 @@ import unittest
 import random
 import time
 import os
+import msvcrt
 
 
 class Matrix(object):
@@ -62,7 +63,18 @@ class Matrix(object):
         return collision
 
     def slide(self):
-        
+        while :
+
+
+
+
+            car = "0"
+            check = msvcrt.kbhit()
+            if check:
+                car = msvcrt.getch()
+
+            if car == b"q":
+                y -= 1
 
     def down(self, ):
 
