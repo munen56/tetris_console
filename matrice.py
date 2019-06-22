@@ -45,7 +45,7 @@ class Matrix(object):
 
 
 
-        for x,value in pattern.items(): # on actualise les coordonné des items pour les placer au milieus
+        for x,value in pattern.items(): # on actualise les coordonné des items pour les placer au milieux
             self.last_coord[X + x] = [a + Y for a in pattern[x]]
 
         Matrix.coordonné_vers_matrice(self, self.last_coord, "0")
@@ -63,18 +63,23 @@ class Matrix(object):
         return collision
 
     def slide(self):
-        while :
+
+        car = "0"
+        check = msvcrt.kbhit()
+        if check:
+            car = msvcrt.getch()
+
+        if car == b"q":
+            for x, value in self.last_coord.items():
+                for y in value:
+                    self.last_coord[x] = y - 1
+
+        if car == b"d":
+            for x, value in self.last_coord.items():
+                for y in value:
+                    self.last_coord[x] = y + 1
 
 
-
-
-            car = "0"
-            check = msvcrt.kbhit()
-            if check:
-                car = msvcrt.getch()
-
-            if car == b"q":
-                y -= 1
 
     def down(self, ):
 
@@ -158,34 +163,10 @@ if __name__ == "__main__":
     continu = True
     while continu:
         print(play_ground)
+        time.sleep(0.5)
+        play_ground.slide()
         continu = play_ground.down()
-        time.sleep(0.2)
+
         os.system('cls')
 
-    piece_en_cours = pattern(2)
-    play_ground.place_patern(piece_en_cours.coordonné_pour_affichage)
 
-    continu = True
-    while continu:
-        print(play_ground)
-        continu = play_ground.down()
-        time.sleep(0.2)
-        os.system('cls')
-    piece_en_cours = pattern(3)
-    play_ground.place_patern(piece_en_cours.coordonné_pour_affichage)
-
-    continu = True
-    while continu:
-        print(play_ground)
-        continu = play_ground.down()
-        time.sleep(0.2)
-        os.system('cls')
-    piece_en_cours = pattern(1)
-    play_ground.place_patern(piece_en_cours.coordonné_pour_affichage)
-
-    continu = True
-    while continu:
-        print(play_ground)
-        continu = play_ground.down()
-        time.sleep(0.2)
-        os.system('cls')
