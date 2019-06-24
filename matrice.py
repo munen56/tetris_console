@@ -4,7 +4,7 @@ import random
 import time
 import os
 import msvcrt
-import winsound
+
 
 class Matrix(object):
 
@@ -61,19 +61,17 @@ class Matrix(object):
 
         return collision
 
-    def _side_collision(self, side):
+    def _side_collision(self):
         collision = False
 
         for x, value in self.last_coord.items():
             for _, y in enumerate(value):
-                if side == "right" and self.matrix[x][y + 1] == "O" or self.matrix[x][y + 1] == "#":
+                if self.matrix[x][y + 1] == "O" or self.matrix[x][y + 1] == "#":
                     collision = True  # coté droit
-                if side == "left" and self.matrix[x][y - 1] == "O" or self.matrix[x][y - 1] == "#":
+                if self.matrix[x][y + 1] == "O" or self.matrix[x][y + 1] == "#":
                     collision = True # coté gauche
 
-        return collision
-
-    def slide(self):
+    def translate(self):
 
         car = "0"
         check = msvcrt.kbhit()
@@ -81,12 +79,10 @@ class Matrix(object):
             car = msvcrt.getch() # todo placer cette merde dans methode keyboard_input
             Matrix.coordonné_vers_matrice(self, self.last_coord, " ")
 
-        if car == b"q" and not Matrix._side_collision(self, "left"):
+        if car == b"q":
             Matrix._deplacement(self, "left")
-            return True
-        elif car == b"d" and not Matrix._side_collision(self, "right"):
+        elif car == b"d":
             Matrix._deplacement(self, "right")
-            return True
 
     def _deplacement(self, direction):
 
@@ -96,7 +92,7 @@ class Matrix(object):
                     self.last_coord[x][indice] = y - 1
                 elif direction == "right":
                     self.last_coord[x][indice] = y + 1
-    #def rotate(self):
+
     def down(self, ):
 
         nouveau_coordonné = {}
@@ -119,17 +115,11 @@ class Matrix(object):
 
     def __repr__(self):
 
-
         matrix_display = ""
         for line in range(len(self.matrix)): # on concatene toute les ligne en y intercalant  un retour chariot
             matrix_display += "".join(self.matrix[line]) + "\n"
 
         return matrix_display
-
-
-
-
-
 
 #-----------------------------------------------------------------------------------------
 
@@ -147,10 +137,8 @@ class pattern(object):
         if choice == 1: #truc décalé
             self.coordonné_pour_affichage = {0: [1, 2], 1: [0, 1]}
 
-
         elif choice == 2: # T a l'envers
             self.coordonné_pour_affichage = {0: [1], 1: [0, 1, 2]}
-
 
         elif choice == 3: # carre
             self.coordonné_pour_affichage = {0: [0, 1], 1: [0, 1]}
@@ -169,8 +157,17 @@ class pattern(object):
 
 if __name__ == "__main__":
 
-
     play_ground = Matrix(20, 40)
+
+    def keyboard_input():
+        car = "0"
+        check = msvcrt.kbhit()
+        if check:
+            car = msvcrt.getch()
+
+
+
+
 
     while True:
         piece_en_cours = pattern("random")
@@ -184,7 +181,7 @@ if __name__ == "__main__":
             print(play_ground)
             while end_time - start_time < 0.5:
                 end_time = time.time()
-                play_ground.slide()
+                play_ground.translate()
                 #todo methode rotate
             continu = play_ground.down()
 

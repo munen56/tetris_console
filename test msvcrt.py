@@ -1,20 +1,18 @@
 import msvcrt
 import time
 
-
 car = "0"
+print("wait 5")
+time.sleep(5)
 
 
-print("wait")
-time.sleep(3)
-check = msvcrt.kbhit()
-if check:
+count = 1
+
+while msvcrt.kbhit():
     car = msvcrt.getch()
-print(car)
-print("wait")
-time.sleep(3)
-check = msvcrt.kbhit()
-if check:
-    car = msvcrt.getch()
-print(car)
+    print("caractere {}, tour de boucle {}".format(car, count))
+    count += 1
+print ("SORTIE de boucle")
+
+
 input()
