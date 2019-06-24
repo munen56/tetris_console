@@ -4,7 +4,7 @@ import random
 import time
 import os
 import msvcrt
-
+import winsound
 
 class Matrix(object):
 
@@ -19,46 +19,57 @@ class Matrix(object):
         self.matrix = []
         self.last_coord = {}
 
+        Matrix._create_matrix(self)
 
+    def _create_matrix(self):
 
         for j in range(self.line_num):
             self.matrix.append( list(self.fill_motif * self.column_num))
 
         if self.border :
-            for ind, val in enumerate(self.matrix):
-                self.matrix[ind][0] = "#"
-                self.matrix[ind][self.column_num -1] =  "#"
+            for indice, _ in enumerate(self.matrix):
+                self.matrix[indice][0] = "#"
+                self.matrix[indice][self.column_num -1] =  "#"
             self.matrix[self.line_num - 1] = list("#" * self.column_num)
 
     def coordonné_vers_matrice(self, dico_de_coordonné, symbole):
 
-        for x, value in dico_de_coordonné.items():
-            for _, y in enumerate(value):
+        for x, y_group in dico_de_coordonné.items():
+            for _, y in enumerate(y_group):
                 self.matrix[x][y] = symbole
 
     def place_patern(self, pattern):
         """positionne un pattern en haut, au centre de la matrice"""
 
+        X_origin = 0 #premiere ligne (en haut) de la matrice
+        Y_middle = self.column_num // 2 #milieu d'une ligne(si elle est paire ^^).
 
-        X = 0 #premiere ligne (en haut) de la matrice
-        Y = self.column_num // 2 #milieu d'une ligne(si elle est paire ^^).
-
-
-
-        for x,value in pattern.items(): # on actualise les coordonné des items pour les placer au milieux
-            self.last_coord[X + x] = [a + Y for a in pattern[x]]
+        for x in pattern.keys(): # on actualise les coordonné des items pour les placer au milieux
+            self.last_coord[X_origin + x] = [y_pattern + Y_middle for y_pattern in pattern[x]]
 
         Matrix.coordonné_vers_matrice(self, self.last_coord, "0")
 
 
 
-    def is_there_collision(self):
+    def _bottom_collision(self):
         collision = False
 
         for x, value in self.last_coord.items():
             for _, y in enumerate(value):
                 if self.matrix[x+1][y] == "O" or self.matrix[x+1][y] == "#":
-                    collision = True
+                    collision = True # le fond de la boite ou le sommet d'une piece posé
+
+        return collision
+
+    def _side_collision(self, side):
+        collision = False
+
+        for x, value in self.last_coord.items():
+            for _, y in enumerate(value):
+                if side == "right" and self.matrix[x][y + 1] == "O" or self.matrix[x][y + 1] == "#":
+                    collision = True  # coté droit
+                if side == "left" and self.matrix[x][y - 1] == "O" or self.matrix[x][y - 1] == "#":
+                    collision = True # coté gauche
 
         return collision
 
@@ -67,32 +78,35 @@ class Matrix(object):
         car = "0"
         check = msvcrt.kbhit()
         if check:
-            car = msvcrt.getch()
+            car = msvcrt.getch() # todo placer cette merde dans methode keyboard_input
             Matrix.coordonné_vers_matrice(self, self.last_coord, " ")
 
-        if car == b"q":
-            for x, value in self.last_coord.items():
-                for y, value in enumerate(value):
-                    self.last_coord[x][y] = value - 1
+        if car == b"q" and not Matrix._side_collision(self, "left"):
+            Matrix._deplacement(self, "left")
+            return True
+        elif car == b"d" and not Matrix._side_collision(self, "right"):
+            Matrix._deplacement(self, "right")
+            return True
 
-        if car == b"d":
-            for x, value in self.last_coord.items():
-                for y, value in enumerate(value):
-                    self.last_coord[x][y] = value + 1
+    def _deplacement(self, direction):
 
-
-
+        for x, y_group in self.last_coord.items():
+            for indice, y in enumerate(y_group):
+                if direction == "left":
+                    self.last_coord[x][indice] = y - 1
+                elif direction == "right":
+                    self.last_coord[x][indice] = y + 1
+    #def rotate(self):
     def down(self, ):
 
         nouveau_coordonné = {}
 
-
-        if Matrix.is_there_collision(self):
+        if Matrix._bottom_collision(self):
             Matrix.coordonné_vers_matrice(self, self.last_coord, "O")
             self.last_coord = {}
             return False
-        else:
 
+        else:
             for x, y in self.last_coord.items():
                     nouveau_coordonné[x+1] = y
 
@@ -100,6 +114,7 @@ class Matrix(object):
             Matrix.coordonné_vers_matrice(self, nouveau_coordonné, "0")
 
             self.last_coord = nouveau_coordonné
+
             return True
 
     def __repr__(self):
@@ -153,6 +168,7 @@ class pattern(object):
 #-----------------------------------------------------------------------------------------------------------
 
 if __name__ == "__main__":
+
 
     play_ground = Matrix(20, 40)
 

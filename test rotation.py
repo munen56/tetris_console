@@ -28,15 +28,11 @@ def rotate(x, y, theta):
     return x_prim, y_prim
 
 
+mess =  "Ludivine"
+x_coo = [15, 15, 15, 15, 15, 15, 15, 15]
+y_coo = [45, 46, 47, 48, 49, 50, 51, 52]
 
-x_coo = [15, 15, 14, 14]
-y_coo = [45, 46, 46, 47]
 
-for i in range(len(x_coo)): #line
-    matrix[x_coo[i]][y_coo[i]] = "O"
-
-matrix_display()
-os.system ("cls")
 
 tet=0
 while tet<361:
@@ -49,7 +45,7 @@ while tet<361:
         y_temp.append(y+45)
 
     for i in range(len(x_coo)):  # line
-        matrix[x_temp[i]][y_temp[i]] = "O"
+        matrix[x_temp[i]][y_temp[i]] = mess[i]
 
     matrix_display()
 
