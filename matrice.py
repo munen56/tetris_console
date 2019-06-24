@@ -61,15 +61,16 @@ class Matrix(object):
 
         return collision
 
-    def _side_collision(self):
+    def _side_collision(self, direction):
         collision = False
 
         for x, value in self.last_coord.items():
             for _, y in enumerate(value):
-                if self.matrix[x][y + 1] == "O" or self.matrix[x][y + 1] == "#":
-                    collision = True  # coté droit
-                if self.matrix[x][y + 1] == "O" or self.matrix[x][y + 1] == "#":
-                    collision = True # coté gauche
+                if direction == "left" and self.matrix[x][y - 1] == "O" or self.matrix[x][y - 1] == "#":
+                    collision = True  # coté gauche
+                if direction == "right" and self.matrix[x][y + 1] == "O" or self.matrix[x][y + 1] == "#":
+                    collision = True # coté droit
+        return collision
 
     def translate(self):
 
@@ -79,9 +80,9 @@ class Matrix(object):
             car = msvcrt.getch() # todo placer cette merde dans methode keyboard_input
             Matrix.coordonné_vers_matrice(self, self.last_coord, " ")
 
-        if car == b"q":
+        if car == b"q" and not Matrix._side_collision(self, "left"):
             Matrix._deplacement(self, "left")
-        elif car == b"d":
+        elif car == b"d" and not Matrix._side_collision(self, "right"):
             Matrix._deplacement(self, "right")
 
     def _deplacement(self, direction):
