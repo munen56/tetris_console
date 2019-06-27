@@ -8,8 +8,9 @@ import math as mt
 
 
 class Matrix(object):
+    #scinder en deux classe pattern_operation et matrix
 
-    def __init__(self, line=1, column=3, fill_motif=".", border=True):
+    def __init__(self, line=1, column=3, fill_motif=" ", border=True):
         self.line_num = line
         self.column_num = column
         self.fill_motif = fill_motif
@@ -36,16 +37,39 @@ class Matrix(object):
             for _, y in enumerate(y_group):
                 self.matrix[x][y] = symbole
 
-    def place_patern(self, pattern):
+    def draw_vertival(self, y ):
+        for line in self.matrix:
+            line[y] = "#"
+
+    def draw_message(self, mess="default message", x=10, y=6):
+
+        for indice, _ in enumerate(self.matrix[x]):
+            if indice >= y and indice < len(mess) + y:
+                self.matrix[x][indice] = mess[indice-y]
+
+
+
+    def place_mobile_patern(self, pattern, y):
         """positione un pattern en haut, au centre de la matrice"""
 
         x_origin = 0  # premiere ligne (en haut) de la matrice
-        y_middle = self.column_num // 2  # milieu d'une ligne(si elle est paire ^^).
-
+        #y_middle = self.column_num // 2  # milieu d'une ligne(si elle est paire ^^).
+        y_middle = y
         for x in pattern.keys():  # on actualise les coordonné des items pour les placer au milieux
             self.last_coord[x_origin + x] = [y_pattern + y_middle for y_pattern in pattern[x]]
 
         Matrix.coordonné_vers_matrice(self, self.last_coord, "0")
+
+    def place_patern(self, pattern, motif, x, y):
+
+        coordone={}
+        x_origin = x  # premiere ligne (en haut) de la matrice
+
+        y_middle = y
+        for x in pattern.keys():  # on actualise les coordonné des items pour les placer au milieux
+            coordone[x_origin + x] = [y_pattern + y_middle for y_pattern in pattern[x]]
+
+        Matrix.coordonné_vers_matrice(self, coordone, motif)
 
     def _bottom_collision(self):
         collision = False
@@ -166,9 +190,9 @@ class pattern(object):
     def __init__(self, choice=1):
 
         self.coordonné_pour_affichage = {}  # dictionnaire qui contient les coordonés des pattern  0 = 2,3,4 de la forme x = y+2, y+3, y+4
-        self.coordonné_pour_collision = {}
+
         if choice == "random":
-            choice = random.randrange(1, 5)
+            choice = random.randrange(1, 7)
 
         if choice == 1:  # truc décalé
             self.coordonné_pour_affichage = {0: [1, 2], 1: [0, 1]}
@@ -181,9 +205,12 @@ class pattern(object):
         elif choice == 4:  # l
             self.coordonné_pour_affichage = {0: [2], 1: [0, 1, 2]}
 
-        # elif choice == 5:
-        # elif choice == 6:
-        # elif choice == 7:
+        elif choice == 5: # L'autre l
+            self.coordonné_pour_affichage = {0: [0], 1: [0, 1, 2]}
+
+        elif choice == 6: # baton
+            self.coordonné_pour_affichage = {0: [0, 1, 2, 3]}
+
         else:
             print("error")
 
@@ -194,16 +221,46 @@ class pattern(object):
 # -----------------------------------------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    play_ground = Matrix(20, 40)
+    line = 20
+    column = 40
+    level = 0.5
+    play_ground = Matrix(line, column)
+    score = 0
+    def display_score(score):
 
-    # ---------<<<pour test a supprimer des que possible
-    """piece_en_cours = pattern(1)
-    play_ground.place_patern(piece_en_cours.coordonné_pour_affichage)
-    print(play_ground)
-    play_ground.rotate_90degree()
-    """
+        play_ground.draw_message("************", 5, 27)
+        play_ground.draw_message(" YOUR SCORE:", 6, 27)
+        play_ground.draw_message("     %s" %(score), 7, 27)
+        play_ground.draw_message("************", 8, 27)
 
-# ----------pour test a supprimer des que possible>>>
+
+
+    def game_over():
+        continu_play_loop = True
+
+        for column in play_ground.matrix[0]:
+            if "O" in column:
+                continu_play_loop = False
+
+                play_ground.draw_message("************************", 9)
+                play_ground.draw_message("*     game over        *", 10)
+                play_ground.draw_message("* hit enter to quit    *", 11)
+                play_ground.draw_message("************************", 12)
+                print(play_ground)
+                input("")
+
+        return continu_play_loop
+
+    def line_completed(score=0):
+
+        for indice, line in enumerate(play_ground.matrix):
+            if line[1:score_line_y] == ["O"] * (score_line_y - 1):
+                del(play_ground.matrix[indice])
+                #play_ground.matrix.insert(0, play_ground.matrix[0])
+                score += 100
+        return score
+
+
 
     def keyboard_input():
         car = "0"
@@ -212,14 +269,24 @@ if __name__ == "__main__":
             car = msvcrt.getch()
         return  car
 
+    score_line_y = 2* column//3
+    play_ground.draw_vertival(score_line_y)
+
+
+    display_score(score)
 
 
 
-    while True:
-        piece_en_cours = pattern("random")
-        play_ground.place_patern(piece_en_cours.coordonné_pour_affichage)
 
+    play_loop = True
+    piece_suivante = pattern("random")
+    while play_loop:
+        play_ground.place_patern(piece_suivante.coordonné_pour_affichage, " ", 2, 32)
+        piece_en_cours = piece_suivante
+        piece_suivante = pattern("random")
 
+        play_ground.place_patern(piece_suivante.coordonné_pour_affichage,"0" , 2, 32)
+        play_ground.place_mobile_patern(piece_en_cours.coordonné_pour_affichage, score_line_y//2)
 
 
         continu = True
@@ -228,14 +295,15 @@ if __name__ == "__main__":
             end_time = 0
             print(play_ground)
 
-            while end_time - start_time < 0.5:
+            while end_time - start_time < level:
                 end_time = time.time()
 
                 command_carachters = keyboard_input()
                 if command_carachters != 0:
                     if command_carachters == b"z":
                         play_ground.rotate(command_carachters)
-                        continu = play_ground.down()
+                        break
+
                     elif command_carachters == b"s":
                         break
 
@@ -245,10 +313,12 @@ if __name__ == "__main__":
                     elif command_carachters == b"d":
                         play_ground.translate("right")
 
-
-
-
             continu = play_ground.down()
-
             os.system('cls')
+
+        play_loop = game_over()
+        display_score(score)
+        score += line_completed()
+
+
 
