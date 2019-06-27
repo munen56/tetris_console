@@ -74,15 +74,15 @@ class Matrix(object):
     def _rotation_center(self):
         """return les coordonnés du centre de rotation du motif actuelle"""
 
-        center_x = max(self.last_coord.keys()) - 1
+        center_x = max(self.last_coord.keys()) -1
         for y in self.last_coord.values():
             center_y = (min(y)+((max(y) - min(y)) // 2))
-        print("center x", center_x,"center y", center_y)
+
         return center_x, center_y
 
-    def rotate_90degree(self,car, theta=90):
+    def rotate(self,car, theta=90):
 
-        if car == b"z":
+
             rotated_coordinate = {}
             mini=0
             list_coo=[]
@@ -94,39 +94,30 @@ class Matrix(object):
 
             for x, y_group in self.last_coord.items():
                 for y in y_group:
-
-
                     x_tourné = round(((x- center_x) * mt.cos(theta_radians)) - ((y- center_y) * mt.sin(theta_radians))) + center_x
                     y_tourné =  round(((x- center_x) * mt.sin(theta_radians)) + ((y- center_y) * mt.cos(theta_radians))) + center_y
-
-
-
                     list_coo.append((x_tourné, y_tourné))
-
 
             for couple in list_coo:
                 rotated_coordinate[couple[0]]=[]
 
-
             for couple in list_coo:
                 rotated_coordinate[couple[0]].append(couple[1])
 
-            if min(rotated_coordinate.keys()) > 0:
+            if min(rotated_coordinate.keys()) > 0: #on empeche x negatif = pas de rotation sur les premiere lignes
                 Matrix.coordonné_vers_matrice(self, self.last_coord, " ")
                 self.last_coord = rotated_coordinate
 
-
-
     # ------------------------------------------------------------------------------------------------------------------
-    def translate(self, car):
+    def translate(self, direction):
 
         Matrix.coordonné_vers_matrice(self, self.last_coord, " ")  # risque d'effacement du pattern lors de l'appel a translate si on commente la ligne les traces laissé ne constituent pas des points d'arrets ???
 
-        if car == b"q" and not Matrix._side_collision(self, "left"):
+        if direction == "left" and not Matrix._side_collision(self, "left"):
             Matrix._deplacement(self, "left")
             return True
 
-        elif car == b"d" and not Matrix._side_collision(self, "right"):
+        elif direction == "right" and not Matrix._side_collision(self, "right"):
             Matrix._deplacement(self, "right")
             return True
 
@@ -139,7 +130,7 @@ class Matrix(object):
                 elif direction == "right":
                     self.last_coord[x][indice] = y + 1
 
-    def down(self, ):
+    def down(self):
 
         nouveau_coordonné = {}
 
@@ -242,9 +233,21 @@ if __name__ == "__main__":
 
                 command_carachters = keyboard_input()
                 if command_carachters != 0:
-                    play_ground.translate(command_carachters)
-                    play_ground.rotate_90degree(command_carachters)
-                    #play_ground.anticip_down(command_carachters)
+                    if command_carachters == b"z":
+                        play_ground.rotate(command_carachters)
+                        continu = play_ground.down()
+                    elif command_carachters == b"s":
+                        break
+
+                    elif command_carachters == b"q":
+                        play_ground.translate("left")
+
+                    elif command_carachters == b"d":
+                        play_ground.translate("right")
+
+
+
+
             continu = play_ground.down()
 
             os.system('cls')
