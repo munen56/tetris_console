@@ -74,15 +74,15 @@ class Matrix(object):
     def _rotation_center(self):
         """return les coordonnés du centre de rotation du motif actuelle"""
 
-        center_x = max(self.last_coord.keys())
+        center_x = max(self.last_coord.keys()) - 1
         for y in self.last_coord.values():
-            center_y = min(y)
+            center_y = (min(y)+((max(y) - min(y)) // 2))
         print("center x", center_x,"center y", center_y)
         return center_x, center_y
 
-    def rotate_90degree(self, theta=90):
+    def rotate_90degree(self,car, theta=90):
 
-        #if car == b"z":
+        if car == b"z":
             rotated_coordinate = {}
             mini=0
             list_coo=[]
@@ -91,35 +91,30 @@ class Matrix(object):
             y_tourné = []
             center_x, center_y = Matrix._rotation_center(self)
 
+
             for x, y_group in self.last_coord.items():
                 for y in y_group:
-                    print("x, y ", x, y)
-                    #x -= center_x methode center defectueuse
-                    #y -= center_y
 
-                    x_tourné = round((x * mt.cos(theta_radians)) - (y * mt.sin(theta_radians))) + center_x
-                    y_tourné =  round((x * mt.sin(theta_radians)) + (y * mt.cos(theta_radians))) + center_y
+
+                    x_tourné = round(((x- center_x) * mt.cos(theta_radians)) - ((y- center_y) * mt.sin(theta_radians))) + center_x
+                    y_tourné =  round(((x- center_x) * mt.sin(theta_radians)) + ((y- center_y) * mt.cos(theta_radians))) + center_y
 
 
 
                     list_coo.append((x_tourné, y_tourné))
 
-            for couple in list_coo:
-                if mini > couple[0]:
-                    mini = couple[0]
 
             for couple in list_coo:
-                rotated_coordinate[couple[0]+abs(mini)]=[]
+                rotated_coordinate[couple[0]]=[]
 
 
             for couple in list_coo:
-                rotated_coordinate[couple[0]+abs(mini)].append(couple[1])
+                rotated_coordinate[couple[0]].append(couple[1])
 
-            Matrix.coordonné_vers_matrice(self, self.last_coord, " ")
-            self.last_coord = rotated_coordinate
+            if min(rotated_coordinate.keys()) > 0:
+                Matrix.coordonné_vers_matrice(self, self.last_coord, " ")
+                self.last_coord = rotated_coordinate
 
-            print("last coord", self.last_coord)
-            print('rotated', rotated_coordinate)
 
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -211,7 +206,7 @@ if __name__ == "__main__":
     play_ground = Matrix(20, 40)
 
     # ---------<<<pour test a supprimer des que possible
-    piece_en_cours = pattern(1)
+    """piece_en_cours = pattern(1)
     play_ground.place_patern(piece_en_cours.coordonné_pour_affichage)
     print(play_ground)
     play_ground.rotate_90degree()
@@ -253,4 +248,4 @@ if __name__ == "__main__":
             continu = play_ground.down()
 
             os.system('cls')
-            """
+
