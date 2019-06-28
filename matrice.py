@@ -1,9 +1,7 @@
 # coding=utf-8
 import unittest
 import random
-import time
-import os
-import msvcrt
+
 import math as mt
 
 
@@ -45,7 +43,7 @@ class Matrix(object):
         for line in self.matrix:
             line[y] = "#"
 
-    def draw_message(self, mess="default message", x=10, y=6):
+    def draw_message(self, mess, x, y):
 
         for indice, _ in enumerate(self.matrix[x]):
             if y <= indice < len(mess) + y:
@@ -223,100 +221,4 @@ class Pattern(object):
 # -----------------------------------------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    #  bugs le carré ne descensd pas si on le tourne en continue,
-    #  les piece peuvent s'attacher au mur lors d'une rotation, les piece se magnetisent au mur
-    line = 20
-    column = 40
-    level = 0.5
-    play_ground = Matrix(line, column)
-    score = 0
-
-
-    def display_score(score):
-
-        play_ground.draw_message("************", 5, 27)
-        play_ground.draw_message(" YOUR SCORE:", 6, 27)
-        play_ground.draw_message("     %s" % score, 7, 27)
-        play_ground.draw_message("************", 8, 27)
-
-
-    def game_over():
-        continu_play_loop = True
-
-        for column in play_ground.matrix[0]:
-            if "O" in column:
-                continu_play_loop = False
-
-                play_ground.draw_message("************************", 9)
-                play_ground.draw_message("*     game over        *", 10)
-                play_ground.draw_message("* hit enter to quit    *", 11)
-                play_ground.draw_message("************************", 12)
-                print(play_ground)
-                input("")
-
-        return continu_play_loop
-
-
-    def line_completed(score=0):
-
-        for indice, line in enumerate(play_ground.matrix):
-            if line[1:score_line_y] == ["O"] * (score_line_y - 1):
-                del (play_ground.matrix[indice])
-                # play_ground.matrix.insert(0, play_ground.matrix[0])
-                score += 100
-        return score
-
-
-    def keyboard_input():
-        car = "0"
-        check = msvcrt.kbhit()
-        if check:
-            car = msvcrt.getch()
-        return car
-
-
-    score_line_y = 2 * column // 3
-    play_ground.draw_vertival(score_line_y)
-
-    display_score(score)
-
-    play_loop = True
-    piece_suivante = Pattern("random")
-    while play_loop:
-        play_ground.place_patern(piece_suivante.coordinate_for_display, " ", 2, 32)
-        piece_en_cours = piece_suivante
-        piece_suivante = Pattern("random")
-
-        play_ground.place_patern(piece_suivante.coordinate_for_display, "0", 2, 32)
-        play_ground.place_mobile_patern(piece_en_cours.coordinate_for_display, score_line_y // 2)
-
-        continu = True
-        while continu:
-            start_time = time.time()
-            end_time = 0
-            print(play_ground)
-
-            while end_time - start_time < level:
-                end_time = time.time()
-
-                command_carachters = keyboard_input()
-                if command_carachters != 0:
-                    if command_carachters == b"z":
-                        play_ground.rotate()
-                        break
-
-                    elif command_carachters == b"s":
-                        break
-
-                    elif command_carachters == b"q":
-                        play_ground.translate("left")
-
-                    elif command_carachters == b"d":
-                        play_ground.translate("right")
-
-            continu = play_ground.down()
-            os.system('cls')
-
-        play_loop = game_over()
-        display_score(score)
-        score += line_completed()
+    pass
