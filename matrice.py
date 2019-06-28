@@ -90,10 +90,10 @@ class Matrix(object):
             for _, y in enumerate(value):
                 if direction == "left" and self.matrix[x][y - 1] == "O" or direction == "left" and self.matrix[x][y - 1] == "#":
                     collision = True  # coté gauche
-                    print ("gauche")
+
                 if direction == "right" and self.matrix[x][y + 1] == "O" or direction == "right" and self.matrix[x][y + 1] == "#":
                     collision = True  # coté droit
-                    print("droit")
+
         return collision
 
     # rotation group ---------------------------------------------------------------------------------------------------
@@ -141,7 +141,6 @@ class Matrix(object):
         # translate si on commente la ligne les traces laissé ne constituent pas des points d'arrets ???
 
         if direction == "left" and not Matrix._side_collision(self, "left"):
-            print("grgrgrgrgrgrggrgggrggrgrgrgrgrgrgrgrgrgrg")
             Matrix._deplacement(self, "left")
             return True
 
