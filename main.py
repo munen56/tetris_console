@@ -125,6 +125,8 @@ while play_loop:
 
                 elif command_carachters == b"q":
                     play_ground.translate("left")
+                    print("dddddddddddddddddddddddddddddddddddddddddddddddddddd")
+
 
                 elif command_carachters == b"d":
                     play_ground.translate("right")
