@@ -14,19 +14,27 @@ number_of_line = 20
 number_of_column = 40
 level = 0.5
 play_ground = Matrix(number_of_line, number_of_column)
+zone_de_score_y = 2 * number_of_column // 3
 score = 0
 
-#  -----------------------------------------------------------------------------------------------------------------------
+#  ---------------------------------------------------------------------------------------------------------------------
 
+
+def front_page():
+
+    front_matrix = Matrix(number_of_line, number_of_column)
+
+
+#  ---------------------------------------------------------------------------------------------------------------------
 
 def display_score(score_disp):
 
-    play_ground.draw_message("************", 5, 27)
-    play_ground.draw_message(" YOUR SCORE:", 6, 27)
-    play_ground.draw_message("     %s" % score_disp, 7, 27)
-    play_ground.draw_message("************", 8, 27)
+    play_ground.draw_message("*" * (number_of_column-zone_de_score_y-2), 5, zone_de_score_y + 1)
+    play_ground.draw_message(" YOUR SCORE:", 6, zone_de_score_y + 1)
+    play_ground.draw_message("     %s" % score_disp, 7, zone_de_score_y + 1)
+    play_ground.draw_message("*" * (number_of_column-zone_de_score_y-2), 8, zone_de_score_y + 1)
 
-#  -----------------------------------------------------------------------------------------------------------------------
+#  ---------------------------------------------------------------------------------------------------------------------
 
 
 def game_over():
@@ -46,21 +54,29 @@ def game_over():
 
     return continu_play_loop
 
-#  -----------------------------------------------------------------------------------------------------------------------
+#  ---------------------------------------------------------------------------------------------------------------------
 
 
 def line_completed(next_score):
 
     for indice, line in enumerate(play_ground.matrix):
+
         if line[1:zone_de_score_y] == ["O"] * (zone_de_score_y - 1):
-            del (play_ground.matrix[indice])
-            # play_ground.matrix.insert(0, play_ground.matrix[0])
+
+            slide_down_playground(indice)
             next_score += 100
 
     return next_score
 
-#  -----------------------------------------------------------------------------------------------------------------------
+#  ---------------------------------------------------------------------------------------------------------------------
+def slide_down_playground(start_index):
 
+    start_index
+    for index in reversed(range(1, start_index + 1)):
+        play_ground.matrix[index][1:zone_de_score_y] = play_ground.matrix[index-1][1:zone_de_score_y]
+
+
+#  ---------------------------------------------------------------------------------------------------------------------
 
 def keyboard_input():
 
@@ -71,7 +87,7 @@ def keyboard_input():
 
     return input_character
 
-#  -----------------------------------------------------------------------------------------------------------------------
+#  ---------------------------------------------------------------------------------------------------------------------
 
 def load_previous_score():
 
@@ -90,7 +106,7 @@ def save_new_score(current_score):
 #  ---------------------------------------------------------------------------------------------------------------------
 
 
-zone_de_score_y = 2 * number_of_column // 3
+
 play_ground.draw_vertival(zone_de_score_y)
 
 display_score(score)
@@ -98,11 +114,11 @@ display_score(score)
 play_loop = True
 piece_suivante = Pattern("random")
 while play_loop:
-    play_ground.place_patern(piece_suivante.coordinate_for_display, " ", 2, 32)
+    play_ground.place_patern(piece_suivante.coordinate_for_display, " ", 2, zone_de_score_y + 3)
     piece_en_cours = piece_suivante
     piece_suivante = Pattern("random")
 
-    play_ground.place_patern(piece_suivante.coordinate_for_display, "0", 2, 32)
+    play_ground.place_patern(piece_suivante.coordinate_for_display, "0", 2, zone_de_score_y + 3)
     play_ground.place_mobile_patern(piece_en_cours.coordinate_for_display, zone_de_score_y // 2)
 
     continu = True
@@ -135,7 +151,7 @@ while play_loop:
         os.system('cls')
 
     play_loop = game_over()
-    score = line_completed(score)
+    score = line_completed(score) # why not score en variable global ?
     display_score(score)
 
 #save_new_score(score)
